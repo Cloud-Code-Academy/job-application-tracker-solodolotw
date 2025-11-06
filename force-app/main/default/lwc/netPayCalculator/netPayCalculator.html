@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="Compensation Calculation!" icon-name="custom:custom14">
+        <lightning-button 
+            variant="brand" 
+            label="Calculate" 
+            title="Calculate" 
+            slot="actions" 
+            onclick={calculatePay} 
+            class="slds-m-left_x-small"
+        ></lightning-button>
+        <div class="slds-p-horizontal_small">
+            <lightning-input 
+                type="number"
+                name="basePay"
+                label="Annual Salary:"
+                value={baseTakeHomePay}
+                onchange={handleChange}
+            ></lightning-input>
+        </div>
+        <div slot="footer">
+            <h1 class="slds-text-heading_large slds-text-title_caps resultText">Monthly Take Home Pay</h1>
+            <p class="slds-text-color_destructive">${monthlyPay}</p>
+                <template lwc:if={showNotWorthIt}>
+                    <p> This job is just not worth it friend.</p>
+                </template>
+                <template lwc:elseif={showLowPay}>
+                    <p> This job has lower pay, but you have potential to learn alot!</p>
+                </template>
+                <template lwc:elseif={showMediumPay}>
+                    <p> This job is a pretty good opportunity!</p>
+                </template>
+                <template lwc:elseif={showHighPay}>
+                    <p> This job will allow you to get a coffee from the local cafe everyday!</p>
+                </template>
+                <template lwc:else>
+                    <p> Press Calculate to render your pay. </p>
+                </template>
+        </div>
+    </lightning-card>
+</template>
