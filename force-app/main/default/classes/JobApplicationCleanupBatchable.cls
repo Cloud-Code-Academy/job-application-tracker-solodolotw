@@ -8,6 +8,7 @@ public with sharing class JobApplicationCleanupBatchable implements Database.Bat
     //Start Batchable
     public Database.QueryLocator start(Database.BatchableContext bc){
 
+        //Retrieve all Stale Apps
         return Database.getQueryLocator([SELECT Id, Status__c, Follow_Up_Date__c, Notes__c  
                                          FROM Job_Application__c 
                                          WHERE Follow_Up_Date__c <= :thirtyDaysAgo

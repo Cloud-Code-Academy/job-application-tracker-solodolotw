@@ -3,15 +3,12 @@ public with sharing class JobApplicationCleanupTest {
 
     @testSetup
     static void setup() {
-        Account acc = new Account(Name = 'Test Company');
-        insert acc;
 
         List<Job_Application__c> appsToInsert = new List<Job_Application__c>();
         
         // Create app with Follow_Up_Date older than 30 days
         Job_Application__c staleApp = new Job_Application__c(
             Job_Title__c = 'Stale Position',
-            Account__c = acc.Id,
             Status__c = 'Saved',
             Follow_Up_Date__c = Date.today().addDays(-31)
         );
@@ -20,7 +17,6 @@ public with sharing class JobApplicationCleanupTest {
         // Create app with Follow_Up_Date within 30 days
         Job_Application__c recentApp = new Job_Application__c(
             Job_Title__c = 'Recent Position',
-            Account__c = acc.Id,
             Status__c = 'Saved',
             Follow_Up_Date__c = Date.today().addDays(-10)
         );
@@ -29,7 +25,6 @@ public with sharing class JobApplicationCleanupTest {
         // Create app that's already Closed
         Job_Application__c closedApp = new Job_Application__c(
             Job_Title__c = 'Already Closed Position',
-            Account__c = acc.Id,
             Status__c = 'Closed',
             Follow_Up_Date__c = Date.today().addDays(-31)
         );
@@ -40,10 +35,13 @@ public with sharing class JobApplicationCleanupTest {
 
     @isTest
     public static void testJobApplicationCleanupBatchable() {
+
+        //Run our Batch job
         Test.startTest();
         Database.executeBatch(new JobApplicationCleanupBatchable());
         Test.stopTest();
 
+        //Retrieve all three kinds of Apps and test them to confirm proper assignments
         List<Job_Application__c> staleApps = [SELECT Id, Status__c, Notes__c 
                                               FROM Job_Application__c 
                                               WHERE Job_Title__c = 'Stale Position'];
