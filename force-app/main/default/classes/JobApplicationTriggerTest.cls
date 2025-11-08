@@ -1,7 +1,7 @@
 @isTest
 public with sharing class JobApplicationTriggerTest {
     @testSetup 
-    //Setup method to for the rest of the methods to reference inside of this class
+    //Setup method for the rest of the methods to reference
     static void setup() {
         List<Account> accountsToInsert = new List<Account>();
         List<Contact> contactsToInsert = new List<Contact>();
@@ -38,6 +38,8 @@ public with sharing class JobApplicationTriggerTest {
     }
     @isTest
     public static void testStatusCreateTask_statusChange() {
+
+        //Retrieve our testSetup Application
         List<Job_Application__c> apps = [SELECT Id, Job_Title__c, Company_Name__c, Status__c  
                                          FROM Job_Application__C 
                                          WHERE Job_Title__c LIKE 'Test Dev%'];
@@ -64,6 +66,7 @@ public with sharing class JobApplicationTriggerTest {
     }
     @isTest
     public static void testStatusCreateTask_allStatuses() {
+        //Retrieve our testSetup Application
         List<Job_Application__c> apps = [SELECT Id, Job_Title__c, Company_Name__c, Status__c  
                                          FROM Job_Application__C 
                                          WHERE Job_Title__c LIKE 'Test Dev%'];
@@ -76,7 +79,7 @@ public with sharing class JobApplicationTriggerTest {
         
         List<String> allStatuses = new List<String>{'Applying', 'Applied', 'Interviewing', 'Negotiating', 'Accepted', 'Closed'};
         List<Job_Application__c> appsToInsert = new List<Job_Application__c>();
-
+        //Create an app for every status
         for (Integer i = 0; i < allStatuses.size(); i++) {
             Job_Application__c app = new Job_Application__c(
                 Job_Title__c = 'Status Test ' + allStatuses[i],

@@ -34,7 +34,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
         if (oldMap == null) {
             return;
         }
-        //Because I can not reference the Account__c.Name, I pulled the Ids from the apps and queried them so I could retrieve their fields.
+
         //To only trigger upon a status change, the method compares the OLD and NEW status
         Set<Id> appsIds = new Set<Id>();
 
@@ -47,7 +47,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
             if (app.Status__c == oldApp.Status__c) {
                 continue;
             }
-
+            //If the Status WAS changed, add to the Id to the list
             appsIds.add(app.Id);
         }
 
@@ -55,10 +55,11 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
             return;
         }
 
+        //List of Tasks to insert
         List<Task> newTasks = new List<Task>();
         
         //List of Applications who's status was changed
-        List<Job_Application__c> appList = [SELECT Id, Account__r.Name, Status__c, Primary_Contact__c, Company_Name__c
+        List<Job_Application__c> appList = [SELECT Id, Status__c, Primary_Contact__c, Company_Name__c
                                             FROM Job_Application__c
                                             WHERE Id IN :appsIds];
 
@@ -68,7 +69,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
             String appStatus = app.Status__c;
             String appCompany = app.Company_Name__c;
 
-            //Create a new task and link the Application
+            //Create a new task and link the Application, as well as the base priority level so we don't have to set it on every status change
             Task task = new Task();
             task.WhatId = app.Id;
             task.Priority = 'Medium';
@@ -78,6 +79,7 @@ public with sharing class JobApplicationTriggerHandler extends TriggerHandler{
             }
 
             //Switch statement on the Status field, checking for each status and creating a subsequent Task
+            //Switch statement for readability and simplicity
             switch on appStatus {
                 when  'Saved'{
                     task.Subject = 'Saved Job Application at "' + appCompany + '" Next Steps';
