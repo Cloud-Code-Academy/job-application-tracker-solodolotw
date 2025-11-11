@@ -12,8 +12,7 @@ public with sharing class JobApplicationCleanupBatchable implements Database.Bat
         return Database.getQueryLocator([SELECT Id, Status__c, Follow_Up_Date__c, Notes__c  
                                          FROM Job_Application__c 
                                          WHERE Follow_Up_Date__c <= :thirtyDaysAgo
-                                         AND (Status__c != 'Closed'
-                                         OR Status__c != 'Accepted')]);
+                                         AND Status__c NOT IN ('Closed', 'Accepted')]);
     }
     
     //Execute Batchable
