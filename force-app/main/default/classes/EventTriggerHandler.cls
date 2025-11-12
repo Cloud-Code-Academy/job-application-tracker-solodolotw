@@ -28,9 +28,9 @@ public with sharing class EventTriggerHandler extends TriggerHandler {
         }
 
         //Add Error to Event
-        for (Event interview : interviews) {
-            if (overlapMap.containsKey(interview.StartDateTime)) {
-                interview.addError('The time slot you are trying to schedule this Event for is currently taken. Please check your calendar and choose a time that does not overlap with another event.');
+        for (Event ev : interviews) {
+            if (overlapMap.containsKey(ev.StartDateTime)) {
+                ev.addError('The time slot you are trying to schedule this Event for is currently taken. Please check your calendar and choose a time that does not overlap with another event.');
             }
         }
     }
