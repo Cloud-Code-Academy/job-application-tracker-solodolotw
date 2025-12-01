@@ -8,13 +8,14 @@ public with sharing class JoobleIntegration {
         String datecreatefrom
     ) {
         
-        String key = 'a64f7d53-2903-4992-b6f6-2fea02c7721c';
-
         HttpRequest request = new HttpRequest();
-        
-        request.setEndpoint('https://jooble.org/api/' + key);
+ 
+        API_Key__mdt joobleAPI_CMDT = API_Key__mdt.getInstance('Jooble_Integration');
+        //String apiKey = joobleAPI_CMDT.API_Key__c;
+
+        request.setEndpoint('callout:JoobleJSON' + '/' + joobleAPI_CMDT.API_Key__c );
         request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json');
+        //request.setHeader('Content-Type', 'application/json');
 
         //Set the REQUEST BODY with the desired text values
         String requestBody = '{"keywords": "' + keywords + '", "location": "' + location + '", "salary": ' + salary + ', "resultonpage": "' + resultonpage + '", "page": "' + page + '", "datecreatefrom": "' + datecreatefrom + '"}';
